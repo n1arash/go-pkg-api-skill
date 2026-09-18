@@ -1,0 +1,6 @@
+interface:
+  display_name: "Go Packages"
+  short_description: "Research Go package APIs, docs, and versions"
+  default_prompt: "Use $go-pkg to verify public Go package APIs for this project's pinned dependency versions before implementation."
+policy:
+  allow_implicit_invocation: true

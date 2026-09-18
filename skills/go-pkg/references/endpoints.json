@@ -1,0 +1,64 @@
+{
+  "api": "https://pkg.go.dev/v1",
+  "openapi": "3.0.3",
+  "contractVersion": "v1.0.0",
+  "source": {
+    "url": "https://pkg.go.dev/v1/openapi.yaml",
+    "repository": "golang/pkgsite",
+    "commit": "cc0ba8e009701f9443bea53c5055718393fa6ba6",
+    "path": "internal/api/openapi.yaml",
+    "blob": "1e70e41138bca610b1fb4c892455991d47c1219f",
+    "reviewed": "2026-09-18",
+    "note": "Manually transcribed routing/parameter subset of the official source contract, not a full or byte-identical OpenAPI snapshot. Direct production downloads were unavailable during authoring."
+  },
+  "routes": {
+    "search": {
+      "path": "/search", "operationId": "getSearch", "pathKind": null,
+      "summary": "Discover public packages or search for a symbol.",
+      "pagination": [],
+      "parameters": {"q":"string", "symbol":"string", "limit":"integer", "token":"string", "filter":"string"}
+    },
+    "package": {
+      "path": "/package/{path}", "operationId": "getPackage", "pathKind": "package",
+      "summary": "Read package metadata, documentation, examples, imports, and licenses.",
+      "pagination": null,
+      "parameters": {"module":"string", "version":"string", "goos":"string", "goarch":"string", "doc":"string", "examples":"boolean", "imports":"boolean", "licenses":"boolean"}
+    },
+    "module": {
+      "path": "/module/{path}", "operationId": "getModule", "pathKind": "module",
+      "summary": "Read module metadata, go.mod contents, README, and licenses.",
+      "pagination": null,
+      "parameters": {"version":"string", "licenses":"boolean", "readme":"boolean"}
+    },
+    "versions": {
+      "path": "/versions/{path}", "operationId": "getVersions", "pathKind": "module",
+      "summary": "List versions across major versions, including retractions and deprecations.",
+      "pagination": [],
+      "parameters": {"limit":"integer", "token":"string", "filter":"string", "pseudo":"boolean"}
+    },
+    "packages": {
+      "path": "/packages/{path}", "operationId": "getPackages", "pathKind": "module",
+      "summary": "List the packages contained in a module version.",
+      "pagination": ["packages"],
+      "parameters": {"version":"string", "limit":"integer", "token":"string", "filter":"string"}
+    },
+    "symbols": {
+      "path": "/symbols/{path}", "operationId": "getSymbols", "pathKind": "package",
+      "summary": "List package symbols for a version and documentation build context.",
+      "pagination": ["symbols"],
+      "parameters": {"module":"string", "version":"string", "goos":"string", "goarch":"string", "limit":"integer", "token":"string", "filter":"string"}
+    },
+    "imported-by": {
+      "path": "/imported-by/{path}", "operationId": "getImported-by", "pathKind": "package",
+      "summary": "Find indexed external importers, excluding the same module.",
+      "pagination": ["importedBy"],
+      "parameters": {"module":"string", "version":"string", "limit":"integer", "token":"string", "filter":"string"}
+    },
+    "vulns": {
+      "path": "/vulns/{path}", "operationId": "getVulns", "pathKind": "module or package",
+      "summary": "Look up Go vulnerability database findings for a module or package.",
+      "pagination": [],
+      "parameters": {"module":"string", "version":"string", "limit":"integer", "token":"string", "filter":"string"}
+    }
+  }
+}
