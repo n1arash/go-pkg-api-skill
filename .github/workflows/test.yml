@@ -1,0 +1,60 @@
+name: Skill checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      live:
+        description: Also check the public pkg.go.dev API
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  offline:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: /bin/bash {0}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Install jq when absent
+        run: |
+          if ! command -v jq >/dev/null; then
+            if [[ "$RUNNER_OS" == macOS ]]; then
+              brew install jq
+            else
+              sudo apt-get update && sudo apt-get install -y jq
+            fi
+          fi
+      - name: Validate and run offline tests
+        run: |
+          set -euo pipefail
+          # Prefer the system Bash (macOS /bin/bash exercises Bash 3.2).
+          export PATH="/bin:/usr/bin:$PATH"
+          bash --version
+          curl --version
+          jq --version
+          bash tests/validate.sh
+          bash tests/test.sh
+          bash tests/test-install.sh
+          bash tests/test-contract.sh
+          python3 tests/test_http.py
+
+  live:
+    if: github.event_name == 'workflow_dispatch' && inputs.live
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - run: bash tests/live.sh
